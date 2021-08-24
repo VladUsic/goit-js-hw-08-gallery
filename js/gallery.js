@@ -41,7 +41,9 @@ ulGallery.insertAdjacentHTML('afterbegin', pictures);
 
 ulGallery.addEventListener('click', onClickHandlerOpen);
 btn.addEventListener('click', onClickHandlerClose);
-closeModalImage.addEventListener('click', closeLightbox)
+if (closeModalImage) {
+    closeModalImage.addEventListener('click', closeLightbox);
+};
 
 function onClickHandlerOpen(e) {
     e.preventDefault();
