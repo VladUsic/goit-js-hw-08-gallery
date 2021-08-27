@@ -2,13 +2,11 @@
 
 import gallery from './gallery-items.js';
 
-
 const ulGallery = document.querySelector('.js-gallery');
-console.log('ulGallery:', ulGallery);
 const lightbox = document.querySelector('.lightbox');
 const btn = document.querySelector('[data-action="close-lightbox"]');
-const closeModalImage = document.querySelector('.js-lightboxContent');
-const lightbox__image = lightbox.querySelector('.lightbox__image');
+const closeModalImage = document.querySelector('.lightbox__content');
+const lightboxImage = lightbox.querySelector('.lightbox__image');
 
 function createElementGallery({ preview, original, description }) {
     const elGallery = `
@@ -25,52 +23,50 @@ function createElementGallery({ preview, original, description }) {
     />
   </a>
 </li>
-    `
+    `;
     return elGallery;
 }
 
 function createAllElementGallery(array) {
-    return array
-        .map((gallery) => createElementGallery(gallery))
-        .join('');
-};
+    return array.map((gallery) => createElementGallery(gallery)).join('');
+}
 
 const pictures = createAllElementGallery(gallery);
 ulGallery.insertAdjacentHTML('afterbegin', pictures);
 
-
 ulGallery.addEventListener('click', onClickHandlerOpen);
+closeModalImage.addEventListener('click', closeLightbox);
 btn.addEventListener('click', onClickHandlerClose);
-if (closeModalImage) {
-    closeModalImage.addEventListener('click', closeLightbox);
-};
 
 function onClickHandlerOpen(e) {
     e.preventDefault();
 
-    if (e.target.nodeName === 'IMG') {
-        lightbox.classList.add('is-open');
-        lightbox__image.src = e.target.getAttribute('data-source');
-        lightbox__image.alt = e.target.alt;
+    if (e.target.nodeName !== 'IMG') {
+        return;
     }
+
+    lightbox.classList.add('is-open');
+    lightboxImage.src = e.target.getAttribute('data-source');
+    lightboxImage.alt = e.target.alt;
     window.addEventListener('keyup', clickKey);
 }
 
 function onClickHandlerClose(e) {
     lightbox.classList.remove('is-open');
     window.removeEventListener('keyup', clickKey);
-    lightbox__image.src = e.target.getAttribute('data-source');
-    lightbox__image.alt = e.target.alt;
+    lightboxImage.src = '';
+    lightboxImage.alt = '';
 }
 
 function closeLightbox(event) {
     if (event.target === event.currentTarget) {
         onClickHandlerClose();
-    };
+    }
 }
 
 function clickKey(event) {
     if (event.code === 'Escape') {
+        console.log('click');
         onClickHandlerClose();
     }
 }
